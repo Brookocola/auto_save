@@ -1,29 +1,28 @@
-import datetime
-import requests
+import urllib
+import urllib.request
+ 
+# 抓取页面方法，调用该方法返回抓取到数据
+def read_pageHtml(url):
+    file = urllib.request.urlopen(url)
+    data = file.read()
+    return data
+ 
+# 传入需要抓取页面的链接 并调用抓取页面方法获得页面数据
+url = "https://celestrak.com/NORAD/elements/gp.php?CATNR=51825"
+data = read_pageHtml(url)
+# 控制台打印数据
+# print(data)
+name=data[44:49]
+# print(data[44:49])
+# 将数据生成txt文件方法 传入保存文件路径 storagePath 以及文件数据 data
+def storageToLocalFiles(storagePath, data):
+    fhandle = open(storagePath,"wb")
+    fhandle.write(data)
+    fhandle.close()
+# 调用文件数据保存方法
+filename=name.decode('utf-8')
+storagePath = filename+'.txt'
+print(storagePath)
+storageToLocalFiles(storagePath, data)
 
-url = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
-headers = {
-        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
-}
 
-
-now_time = datetime.datetime.now()
-year = now_time.year
-month = now_time.month
-day = now_time.day
-hour = now_time.hour
-
-
-sess = requests.Session()
-res = sess.get(url, headers=headers)
-data = res.json()["data"]
-#print(data)
-hot_list = []
-for item in data:
-    item_id = item["target"]["id"]
-    item_title = item["target"]["title"]
-    hot_list.append("{}: {}".format(item_id, item_title))
-
-output = "\n".join(hot_list)
-with open("./hotlist/{}_{}_{}_{}.txt".format(year, month, day, hour), mode="w") as f:
-    f.write(output)
