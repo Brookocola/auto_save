@@ -21,7 +21,7 @@ def storageToLocalFiles(storagePath, data):
     fhandle.close()
 # 调用文件数据保存方法
 filename=name.decode('utf-8')
-storagePath = "./hotlist/"+filename+'.txt'
+storagePath = "./backup/"+filename+'.txt'
 print(storagePath)
 storageToLocalFiles(storagePath, data)
 
